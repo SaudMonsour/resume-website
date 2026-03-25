@@ -1,0 +1,62 @@
+{
+    "bio": {
+        "name": "Jane Doe",
+        "title": "Full Stack Developer",
+        "desc": "Hi! I'm Jane, a full-stack developer passionate about building clean, fast web applications. I love turning complex problems into simple, beautiful products.\n\nI work primarily with React, Node.js, and Python. I am comfortable across the whole stack — from designing databases to polishing UI animations.\n\nWhen I'm not coding, I enjoy hiking, reading science fiction, and contributing to open-source projects.",
+        "img": "my-data/images/hero-base.jpeg",
+        "loc": "San Francisco, CA",
+        "exp": "Software Engineer"
+    },
+    "projects": [
+        {
+            "id": 1,
+            "title": "Task Manager App",
+            "link": "https://github.com/yourusername/task-manager",
+            "img": "",
+            "learned": "A full-stack task management application built with React and Node.js. Features include drag-and-drop task reordering, real-time collaboration via WebSockets, and a RESTful API with JWT authentication.",
+            "skills": "React, Node.js, PostgreSQL, WebSockets"
+        },
+        {
+            "id": 2,
+            "title": "Weather Dashboard",
+            "link": "https://yourusername.github.io/weather-dashboard",
+            "img": "",
+            "learned": "An interactive weather dashboard that fetches real-time data from the OpenWeatherMap API. Built with vanilla JavaScript and Chart.js to display temperature trends and 7-day forecasts with beautiful data visualisations.",
+            "skills": "JavaScript, HTML, CSS, Chart.js, REST APIs"
+        },
+        {
+            "id": 3,
+            "title": "ML Sentiment Analyser",
+            "link": "https://github.com/yourusername/sentiment-analyser",
+            "img": "",
+            "learned": "A machine learning pipeline that classifies customer reviews as positive, negative, or neutral using a fine-tuned BERT model. Achieved 94% accuracy on the test set. Deployed as a Streamlit web app.",
+            "skills": "Python, PyTorch, BERT, Streamlit, Pandas"
+        }
+    ],
+    "certs": [
+        {
+            "id": 101,
+            "title": "AWS Certified Developer – Associate",
+            "link": "https://www.credly.com/badges/your-badge-id",
+            "img": "",
+            "learned": "Earned the AWS Certified Developer Associate certification, demonstrating proficiency in developing, deploying, and debugging cloud-based applications using AWS services such as Lambda, DynamoDB, S3, and API Gateway.",
+            "skills": "AWS Lambda, DynamoDB, S3, CloudFormation, API Gateway"
+        },
+        {
+            "id": 102,
+            "title": "Google UX Design Professional Certificate",
+            "link": "https://coursera.org/verify/your-certificate-id",
+            "img": "",
+            "learned": "Completed the Google UX Design Professional Certificate, covering the full design process from user research and wireframing to prototyping and usability testing. Built three end-to-end portfolio projects.",
+            "skills": "UX Research, Figma, Wireframing, Prototyping, Usability Testing"
+        },
+        {
+            "id": 103,
+            "title": "Meta Front-End Developer Certificate",
+            "link": "https://coursera.org/verify/your-certificate-id-2",
+            "img": "",
+            "learned": "Completed Meta's Front-End Developer Professional Certificate covering React fundamentals, advanced JavaScript patterns, responsive design, and performance optimisation best practices.",
+            "skills": "React, JavaScript, HTML5, CSS3, Performance Optimisation"
+        }
+    ]
+}
