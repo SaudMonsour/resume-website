@@ -1226,11 +1226,14 @@
                 transform: translateY(40px) scale(0.97);
                 transition: opacity 0.9s cubic-bezier(0.2, 1, 0.2, 1),
                     transform 0.9s cubic-bezier(0.2, 1, 0.2, 1);
+                animation: fallbackShow 0.1s 3s forwards;
             }
 
+            @keyframes fallbackShow { to { opacity: 1; transform: none; } }
+
             .reveal-gate.active {
-                opacity: 1;
-                transform: translateY(0) scale(1);
+                opacity: 1 !important;
+                transform: translateY(0) scale(1) !important;
             }
         }
 
@@ -1431,6 +1434,13 @@
                 gap: 15px !important;
                 z-index: 20 !important;
             }
+            /* Bulletproof fix for iOS Safari: force items visible, no animation */
+            .reveal-gate {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+                transition-delay: 0s !important;
+            }
         }
     </style>
 </head>
@@ -1458,6 +1468,7 @@
 
         <div class="admin-tabs">
             <span class="admin-tab active" data-target="adm-about">Biography</span>
+            <span class="admin-tab" data-target="adm-experience">Experience</span>
             <span class="admin-tab" data-target="adm-projects">Projects</span>
             <span class="admin-tab" data-target="adm-certs">Certifications</span>
         </div>
@@ -1523,6 +1534,18 @@
                         <input type="hidden" id="f-item-img">
                     </div>
                 </div>
+                <div class="form-row">
+                    <label>Duration / Dates (Optional)</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="month" id="f-item-start-date" style="flex:1; padding:10px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-secondary); color:var(--text-primary); font-family:inherit; font-size:0.9rem;">
+                        <span style="font-size:0.8rem; color:var(--text-secondary); font-weight:600;">to</span>
+                        <input type="month" id="f-item-end-date" style="flex:1; padding:10px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-secondary); color:var(--text-primary); font-family:inherit; font-size:0.9rem;">
+                    </div>
+                    <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
+                        <input type="checkbox" id="f-item-present" style="width:auto; margin:0; cursor:pointer; accent-color:var(--accent-color);" onchange="document.getElementById('f-item-end-date').disabled = this.checked; if(this.checked) document.getElementById('f-item-end-date').value='';">
+                        <label for="f-item-present" style="margin:0; font-size:0.8rem; text-transform:none; cursor:pointer; color:var(--text-secondary);">I currently work here</label>
+                    </div>
+                </div>
                 <div class="form-row"><label>Description / What I Learned</label><textarea id="f-item-learned" rows="4"
                         required></textarea></div>
                 <div class="form-row"><label>Skills (comma separated)</label><input type="text" id="f-item-skills"
@@ -1555,6 +1578,7 @@
         </div>
         <nav class="header-nav">
             <a id="nav-about" class="nav-link hover-target">ABOUT</a>
+            <a href="#experience" class="nav-link hover-target">EXPERIENCE</a>
             <a href="#projects" class="nav-link hover-target">PROJECTS</a>
             <a href="#certificates" class="nav-link hover-target">CERTIFICATIONS</a>
         </nav>
@@ -1572,11 +1596,15 @@
         </div>
     </header>
 
-    <section id="projects">
+    <section id="experience">
+        <h2 class="section-title">Experience</h2>
+        <div class="items-grid" id="render-experience"></div>
+    </section>
+    <section id="projects" style="background:var(--bg-secondary)">
         <h2 class="section-title">Projects</h2>
         <div class="items-grid" id="render-projects"></div>
     </section>
-    <section id="certificates" style="background:var(--bg-secondary)">
+    <section id="certificates">
         <h2 class="section-title">Certifications</h2>
         <div class="items-grid" id="render-certs"></div>
     </section>
@@ -1596,8 +1624,9 @@
             <div class="footer-col">
                 <h5 style="margin-top: 0;">Navigation</h5>
                 <ul class="footer-links">
+                    <li><a href="#experience" class="c-hover">Experience</a></li>
                     <li><a href="#projects" class="c-hover">Projects</a></li>
-                    <li><a href="#certs" class="c-hover">Certifications</a></li>
+                    <li><a href="#certificates" class="c-hover">Certifications</a></li>
                     <li><a href="#" id="ft-nav-about" class="c-hover">About Me</a></li>
                 </ul>
             </div>
@@ -1674,17 +1703,23 @@
             }
         }
 
-        const EMPTY_DB = { bio: {}, projects: [], certs: [] };
+        const EMPTY_DB = { bio: {}, experience: [], projects: [], certs: [] };
         let storeCache = null;
 
-        const mergeItemsByKey = (existingItems = [], defaultItems = [], key = 'title') => {
+        const mergeItemsByKey = (existingItems = [], defaultItems = [], key = 'id') => {
             const merged = Array.isArray(existingItems) ? [...existingItems] : [];
-            const seen = new Set(merged.map(item => (item?.[key] || '').toString().trim().toLowerCase()).filter(Boolean));
+            // Match primarily by ID, fallback to TITLE for older entries
+            const seenIds = new Set(merged.map(item => (item?.id || '').toString()).filter(Boolean));
+            const seenTitles = new Set(merged.map(item => (item?.title || '').toLowerCase().trim()).filter(Boolean));
+
             (Array.isArray(defaultItems) ? defaultItems : []).forEach(item => {
-                const normalizedKey = (item?.[key] || '').toString().trim().toLowerCase();
-                if (normalizedKey && !seen.has(normalizedKey)) {
+                const idString = (item?.id || '').toString();
+                const titleLower = (item?.title || '').toLowerCase().trim();
+                
+                if (idString && !seenIds.has(idString) && !seenTitles.has(titleLower)) {
                     merged.push(item);
-                    seen.add(normalizedKey);
+                    seenIds.add(idString);
+                    seenTitles.add(titleLower);
                 }
             });
             return merged;
@@ -1692,8 +1727,9 @@
 
         const mergeWithDefaults = (data = {}, defaults = EMPTY_DB) => ({
             bio: data.bio && Object.keys(data.bio).length ? data.bio : (defaults.bio || {}),
-            projects: mergeItemsByKey(data.projects, defaults.projects, 'title'),
-            certs: mergeItemsByKey(data.certs, defaults.certs, 'title')
+            experience: mergeItemsByKey(data.experience, defaults.experience),
+            projects: mergeItemsByKey(data.projects, defaults.projects),
+            certs: mergeItemsByKey(data.certs, defaults.certs)
         });
 
         const Store = {
@@ -1712,10 +1748,24 @@
                     console.warn('Default JSON load failed, using local/empty data.', err);
                 }
 
-                // ندمج البيانات المحلية مع البيانات الافتراضية بدلاً من مسحها
-                let localData = JSON.parse(localStorage.getItem(MY_CONFIG.storageKey)) || EMPTY_DB;
-                storeCache = mergeWithDefaults(localData, defaults);
-                localStorage.setItem(MY_CONFIG.storageKey, JSON.stringify(storeCache));
+                try {
+                    // Always overwrite dynamic sections with remote data for parity
+                    let localData = JSON.parse(localStorage.getItem(MY_CONFIG.storageKey)) || EMPTY_DB;
+                    
+                    // We only preserve 'bio' if it exists locally, but overwrite everything else
+                    storeCache = {
+                        bio: localData.bio && Object.keys(localData.bio).length ? localData.bio : (defaults.bio || {}),
+                        experience: defaults.experience || [],
+                        projects: defaults.projects || [],
+                        certs: defaults.certs || []
+                    };
+                    
+                    localStorage.setItem(MY_CONFIG.storageKey, JSON.stringify(storeCache));
+                    console.log('Store initialized with remote parity');
+                } catch (e) {
+                    console.error("Store initialization failed", e);
+                    storeCache = defaults;
+                }
             }
         };
 
@@ -1741,6 +1791,8 @@
             document.getElementById('f-item-id').value = '';
             document.getElementById('pv-item-img').innerHTML = '<span>No Image Selected</span>';
             document.getElementById('f-item-img').value = '';
+            const ed = document.getElementById('f-item-end-date');
+            if (ed) ed.disabled = false;
         };
 
         const getGitHubHeaders = () => {
@@ -1784,8 +1836,10 @@
             } else {
                 primaryRaw = `${CERT_IMAGE_BASE_URL}/${slug}.png`;
             }
+            // Only strip whitespace if it's a relative path to avoid performance issues with large data URIs
+            const primary = (primaryRaw.startsWith('data:') || primaryRaw.startsWith('http')) ? primaryRaw : primaryRaw.replace(/\s+/g, '');
             return {
-                primary: primaryRaw.replace(/\s+/g, ''),
+                primary: primary,
                 fallback: 'https://via.placeholder.com/800x450?text=Certificate'
             };
         };
@@ -1846,7 +1900,8 @@
         };
 
         function renderAll() {
-            const d = Store.db();
+            try {
+                const d = Store.db();
             // نحدث معلومات قسم "عني" في الصفحة من البيانات الموجودة
             document.getElementById('render-about').innerHTML = `
                 <div style="display:block">
@@ -1870,12 +1925,55 @@
             document.getElementById('ft-copyright').innerHTML = `All rights reserved to ${myName}. © ${new Date().getFullYear()}`;
 
 
+            // دالة ترسم الخبرات
+            const renderExperience = (items) => {
+                if (!items || !items.length) {
+                    document.getElementById('render-experience').innerHTML = '<p class="no-items">Experience details coming soon.</p>';
+                    return;
+                }
+                document.getElementById('render-experience').innerHTML = (items || []).map((i, index) => {
+                    const thumb = i.img ? `<img src="${i.img}">` : '';
+                    const hasLink = i.link && i.link !== '#' && i.link.trim() !== '';
+
+                    let actionButtons = '';
+                    if (hasLink) {
+                        actionButtons = `
+                            <div class="project-actions">
+                                <a href="${i.link}" target="_blank" rel="noopener noreferrer" class="project-action-btn project-action-btn--live hover-target">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                    Company Website
+                                </a>
+                            </div>`;
+                    }
+
+                    const skillTags = (i.skills || '').split(',').map(s => s.trim()).filter(s => s.length > 0);
+                    const hasImage = !!thumb;
+
+                    return `
+                        <div class="dynamic-item${hasImage ? '' : ' no-image'} reveal-gate" style="transition-delay: ${index * 0.08}s">
+                            ${hasImage ? `<div class="item-image" style="background:#fff; padding:30px; display:flex; align-items:center; justify-content:center;">${thumb}</div>` : ''}
+                            <div class="item-content">
+                                <h3>${i.title}</h3>
+                                ${i.date ? `<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 15px; text-transform: uppercase;">${i.date}</div>` : ''}
+                                <div class="item-meta"><h4>Role & Description</h4><p>${i.learned}</p></div>
+                                ${skillTags.length ? `<div class="skills-wrap">${skillTags.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>` : ''}
+                                ${actionButtons}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            };
+
             // Mobile detection: used to skip inline transition-delay (which overrides !important on iOS Safari)
             const _isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
                 || ('ontouchstart' in window);
 
             // دالة ترسم المشاريع في الصفحة وتضيف أزرار الروابط (GitHub أو Live Project)
             const renderProjects = (items) => {
+                if (!items || !items.length) {
+                    document.getElementById('render-projects').innerHTML = '<p class="no-items">Project details coming soon.</p>';
+                    return;
+                }
                 document.getElementById('render-projects').innerHTML = items.map((i, index) => {
                     const thumb = i.img ? `<img src="${i.img}">` : '';
                     const hasGithub = i.link && i.link.includes('github.com');
@@ -1919,6 +2017,10 @@
 
             // دالة ترسم الشهادات، وإذا كانت PDF تحولها لصورة أولاً
             const renderCerts = (items) => {
+                if (!items || !items.length) {
+                    document.getElementById('render-certs').innerHTML = '<p class="no-items">Certifications content coming soon.</p>';
+                    return;
+                }
                 document.getElementById('render-certs').innerHTML = items.map((i, index) => {
                     const isPdf = i.img && i.img.startsWith('data:application/pdf');
                     const certImage = resolveCertImage(i);
@@ -1953,6 +2055,7 @@
                 }).join('');
             };
 
+            if (d.experience) renderExperience(d.experience);
             renderProjects(d.projects);
             renderCerts(d.certs);
 
@@ -1994,14 +2097,21 @@
 
             setTimeout(() => RevealManager.refresh(), 100);
 
-            const activeTab = document.querySelector('.admin-tab.active').dataset.target;
-            if (activeTab !== 'adm-about') {
-                const type = activeTab === 'adm-projects' ? 'projects' : 'certs';
-                document.getElementById('adm-item-list').innerHTML = d[type].map(i => `
-                    <div class="listing-item"><span>${i.title}</span><div class="list-btns"><span class="edit-btn" onclick="editItem('${type}', ${i.id})">EDIT</span><span class="del-btn" onclick="delItem('${type}', ${i.id})">DEL</span></div></div>
-                `).join('');
+            const activeTabEl = document.querySelector('.admin-tab.active');
+            const activeTab = activeTabEl ? activeTabEl.dataset.target : 'adm-about';
+            if (activeTab && activeTab !== 'adm-about') {
+                const type = activeTab === 'adm-experience' ? 'experience' : (activeTab === 'adm-projects' ? 'projects' : 'certs');
+                const listEl = document.getElementById('adm-item-list');
+                if (listEl) {
+                    listEl.innerHTML = (d[type] || []).map(i => `
+                        <div class="listing-item"><span>${i.title}</span><div class="list-btns"><span class="edit-btn" onclick="editItem('${type}', ${i.id})">EDIT</span><span class="del-btn" onclick="delItem('${type}', ${i.id})">DEL</span></div></div>
+                    `).join('');
+                }
             }
-            attachHover();
+                attachHover();
+            } catch (err) {
+                console.error("Rendering failed:", err);
+            }
         }
 
         window.editItem = (type, id) => {
@@ -2013,8 +2123,12 @@
             document.getElementById('f-item-id').value = i.id;
             document.getElementById('f-item-type').value = type;
             document.getElementById('f-item-title').value = i.title;
-            document.getElementById('f-item-link').value = i.link;
-            document.getElementById('f-item-img').value = i.img;
+            document.getElementById('f-item-link').value = i.link || '';
+            document.getElementById('f-item-start-date').value = i.sDate || '';
+            document.getElementById('f-item-end-date').value = i.eDate || '';
+            document.getElementById('f-item-present').checked = i.isPresent || false;
+            document.getElementById('f-item-end-date').disabled = i.isPresent || false;
+            document.getElementById('f-item-img').value = i.img || '';
             document.getElementById('f-item-learned').value = i.learned;
             document.getElementById('f-item-skills').value = i.skills;
             if (i.img) document.getElementById('pv-item-img').innerHTML = `<img src="${i.img}">`;
@@ -2088,7 +2202,7 @@
             } else {
                 document.getElementById('adm-item-form-container').classList.add('active');
                 document.getElementById('gh-import-trigger-box').style.display = target === 'adm-projects' ? 'block' : 'none';
-                document.getElementById('f-item-type').value = target === 'adm-projects' ? 'projects' : 'certs';
+                document.getElementById('f-item-type').value = target === 'adm-experience' ? 'experience' : (target === 'adm-projects' ? 'projects' : 'certs');
                 resetItemForm();
                 document.getElementById('f-item-id').value = '';
                 renderAll();
@@ -2107,9 +2221,15 @@
             const type = document.getElementById('f-item-type').value;
             const id = document.getElementById('f-item-id').value;
             const d = Store.db();
-            const item = { id: id ? parseInt(id) : Date.now(), title: document.getElementById('f-item-title').value, link: document.getElementById('f-item-link').value, img: document.getElementById('f-item-img').value, learned: document.getElementById('f-item-learned').value, skills: document.getElementById('f-item-skills').value };
+            const sD = document.getElementById('f-item-start-date').value;
+            const eD = document.getElementById('f-item-end-date').value;
+            const isP = document.getElementById('f-item-present').checked;
+            const formatM = v => { if(!v) return ''; const p = v.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1],10)-1] + ' ' + p[0]; };
+            const finalDate = sD ? `${formatM(sD)} - ${isP ? 'Present' : (eD ? formatM(eD) : 'Present')}` : '';
+            const item = { id: id ? parseInt(id) : Date.now(), title: document.getElementById('f-item-title').value, link: document.getElementById('f-item-link').value, img: document.getElementById('f-item-img').value, date: finalDate, sDate: sD, eDate: eD, isPresent: isP, learned: document.getElementById('f-item-learned').value, skills: document.getElementById('f-item-skills').value };
             if (id) { const idx = d[type].findIndex(x => x.id === parseInt(id)); d[type][idx] = item; } else d[type].push(item);
             Store.save(d); e.target.reset(); document.getElementById('f-item-id').value = '';
+            document.getElementById('f-item-end-date').disabled = false;
         };
 
         window.delItem = (type, id) => {
@@ -2152,6 +2272,7 @@
                 }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
             },
             refresh() {
+                try {
                 if (!this.observer) this.init();
                 if (this.isMobile) {
                     document.querySelectorAll('.reveal-gate').forEach(el => {
@@ -2165,7 +2286,10 @@
                 }
                 document.querySelectorAll('.reveal-gate:not(.active)').forEach(el => {
                     this.observer.observe(el);
+                    // Fallback ensure visibility
+                    setTimeout(() => el.classList.add('active'), 2000);
                 });
+                } catch (e) { console.warn("Reveal refresh failed", e); }
             }
         };
 
@@ -2195,6 +2319,14 @@
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
+            // Force reset if upgrading to portfolio_v3 or if data looks corrupted
+            try {
+                if (!localStorage.getItem('v3_initialized')) {
+                    ['portfolio_v1', 'portfolio_v2', 'portfolio_db'].forEach(k => localStorage.removeItem(k));
+                    localStorage.setItem('v3_initialized', 'true');
+                }
+            } catch (e) {}
+
             // تهيئة من ملف الإعدادات
             document.getElementById('main-title').innerText = MY_CONFIG.pageTitle;
             document.getElementById('hero-name').innerHTML = `${MY_CONFIG.name}<span>${MY_CONFIG.title}</span>`;
@@ -2239,9 +2371,10 @@
             }
             if (MY_CONFIG.socials.email) {
                 const emIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`;
-                socialsHtml.push(`<a href="mailto:${MY_CONFIG.socials.email}" class="social-icon hover-target">${emIcon}</a>`);
-                footerSocialsHtml.push(`<a href="mailto:${MY_CONFIG.socials.email}" target="_blank" class="hover-target" aria-label="Email">${emIcon}</a>`);
-                footerContactHtml.push(`<li><a href="mailto:${MY_CONFIG.socials.email}" class="c-hover">Email Me</a></li>`);
+                const mailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${MY_CONFIG.socials.email}`;
+                socialsHtml.push(`<a href="${mailUrl}" target="_blank" class="social-icon hover-target">${emIcon}</a>`);
+                footerSocialsHtml.push(`<a href="${mailUrl}" target="_blank" class="hover-target" aria-label="Email">${emIcon}</a>`);
+                footerContactHtml.push(`<li><a href="${mailUrl}" target="_blank" class="c-hover">Email Me</a></li>`);
             }
             document.getElementById('render-socials').innerHTML = socialsHtml.join('');
             document.getElementById('ft-socials').innerHTML = footerSocialsHtml.join('');

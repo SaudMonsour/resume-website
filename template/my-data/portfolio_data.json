@@ -7,9 +7,20 @@
         "loc": "San Francisco, CA",
         "exp": "Software Engineer"
     },
+    "experience": [
+        {
+            "id": "1",
+            "title": "Software Engineer Intern",
+            "learned": "Worked as a software engineering intern at Acme Corp. Contributed to the development of a high-traffic e-commerce platform using React and Node.js. Optimized database queries and improved page load times by 20%.",
+            "skills": "React, Node.js, PostgreSQL, Git",
+            "date": "Jan 2026 - Present",
+            "link": "https://example.com",
+            "img": "my-data/images/example-company.png"
+        }
+    ],
     "projects": [
         {
-            "id": 1,
+            "id": "1001",
             "title": "Task Manager App",
             "link": "https://github.com/yourusername/task-manager",
             "img": "",
@@ -17,46 +28,22 @@
             "skills": "React, Node.js, PostgreSQL, WebSockets"
         },
         {
-            "id": 2,
-            "title": "Weather Dashboard",
-            "link": "https://yourusername.github.io/weather-dashboard",
+            "id": "1002",
+            "title": "Cloud Monitoring Tool",
+            "link": "https://github.com/yourusername/cloud-monitor",
             "img": "",
-            "learned": "An interactive weather dashboard that fetches real-time data from the OpenWeatherMap API. Built with vanilla JavaScript and Chart.js to display temperature trends and 7-day forecasts with beautiful data visualisations.",
-            "skills": "JavaScript, HTML, CSS, Chart.js, REST APIs"
-        },
-        {
-            "id": 3,
-            "title": "ML Sentiment Analyser",
-            "link": "https://github.com/yourusername/sentiment-analyser",
-            "img": "",
-            "learned": "A machine learning pipeline that classifies customer reviews as positive, negative, or neutral using a fine-tuned BERT model. Achieved 94% accuracy on the test set. Deployed as a Streamlit web app.",
-            "skills": "Python, PyTorch, BERT, Streamlit, Pandas"
+            "learned": "Developed a monitoring tool for cloud infrastructure that tracks resource usage and sends automated alerts. Integrated with AWS CloudWatch and Discord for Slack notifications.",
+            "skills": "Go, AWS, Docker, Prometheus"
         }
     ],
     "certs": [
         {
-            "id": 101,
+            "id": "2001",
             "title": "AWS Certified Developer – Associate",
             "link": "https://www.credly.com/badges/your-badge-id",
             "img": "",
-            "learned": "Earned the AWS Certified Developer Associate certification, demonstrating proficiency in developing, deploying, and debugging cloud-based applications using AWS services such as Lambda, DynamoDB, S3, and API Gateway.",
-            "skills": "AWS Lambda, DynamoDB, S3, CloudFormation, API Gateway"
-        },
-        {
-            "id": 102,
-            "title": "Google UX Design Professional Certificate",
-            "link": "https://coursera.org/verify/your-certificate-id",
-            "img": "",
-            "learned": "Completed the Google UX Design Professional Certificate, covering the full design process from user research and wireframing to prototyping and usability testing. Built three end-to-end portfolio projects.",
-            "skills": "UX Research, Figma, Wireframing, Prototyping, Usability Testing"
-        },
-        {
-            "id": 103,
-            "title": "Meta Front-End Developer Certificate",
-            "link": "https://coursera.org/verify/your-certificate-id-2",
-            "img": "",
-            "learned": "Completed Meta's Front-End Developer Professional Certificate covering React fundamentals, advanced JavaScript patterns, responsive design, and performance optimisation best practices.",
-            "skills": "React, JavaScript, HTML5, CSS3, Performance Optimisation"
+            "learned": "Earned the AWS Certified Developer Associate certification, demonstrating proficiency in developing, deploying, and debugging cloud-based applications using AWS services.",
+            "skills": "AWS Lambda, DynamoDB, S3, CloudFormation"
         }
     ]
 }

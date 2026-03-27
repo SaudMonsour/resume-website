@@ -445,6 +445,7 @@
         <span class="m-nav-name" id="m-nav-name">Loading…</span>
         <div class="m-nav-links">
             <a href="#m-about">About</a>
+            <a href="#m-experience">Exp</a>
             <a href="#m-projects">Projects</a>
             <a href="#m-certs">Certs</a>
         </div>
@@ -479,6 +480,14 @@
             <div class="m-about-meta" id="m-about-meta"></div>
             <p class="m-about-desc" id="m-about-desc">—</p>
         </div>
+    </section>
+
+    <div class="m-divider"></div>
+
+    <!-- EXPERIENCE -->
+    <section class="m-section" id="m-experience">
+        <p class="m-section-label">Experience</p>
+        <div id="m-experience-list"></div>
     </section>
 
     <div class="m-divider"></div>
@@ -537,22 +546,30 @@
             }
         }
 
-        const EMPTY_DB = { bio: {}, projects: [], certs: [] };
+        const EMPTY_DB = { bio: {}, experience: [], projects: [], certs: [] };
 
-        const mergeItemsByKey = (existing = [], defaults = [], key = 'title') => {
+        const mergeItemsByKey = (existing = [], defaultItems = [], key = 'id') => {
             const merged = Array.isArray(existing) ? [...existing] : [];
-            const seen = new Set(merged.map(x => (x?.[key] || '').toString().trim().toLowerCase()).filter(Boolean));
-            (Array.isArray(defaults) ? defaults : []).forEach(item => {
-                const k = (item?.[key] || '').toString().trim().toLowerCase();
-                if (k && !seen.has(k)) { merged.push(item); seen.add(k); }
+            const seenIds = new Set(merged.map(x => (x?.id || '').toString()).filter(Boolean));
+            const seenTitles = new Set(merged.map(x => (x?.title || '').toLowerCase().trim()).filter(Boolean));
+
+            (Array.isArray(defaultItems) ? defaultItems : []).forEach(item => {
+                const idStr = (item?.id || '').toString();
+                const titleStr = (item?.title || '').toLowerCase().trim();
+                if (idStr && !seenIds.has(idStr) && !seenTitles.has(titleStr)) {
+                    merged.push(item);
+                    seenIds.add(idStr);
+                    seenTitles.add(titleStr);
+                }
             });
             return merged;
         };
 
         const mergeWithDefaults = (data = {}, defaults = EMPTY_DB) => ({
             bio: data.bio && Object.keys(data.bio).length ? data.bio : (defaults.bio || {}),
-            projects: mergeItemsByKey(data.projects, defaults.projects, 'title'),
-            certs: mergeItemsByKey(data.certs, defaults.certs, 'title')
+            experience: mergeItemsByKey(data.experience, defaults.experience, 'id'),
+            projects: mergeItemsByKey(data.projects, defaults.projects, 'id'),
+            certs: mergeItemsByKey(data.certs, defaults.certs, 'id')
         });
 
         const toCertSlug = (title = '') => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -577,9 +594,37 @@
         const expandIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>`;
         const checkIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
+        function renderExperience(items) {
+            const el = document.getElementById('m-experience-list');
+            if (!items || !items.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem">Details coming soon.</p>'; return; }
+            el.innerHTML = items.map(item => {
+                const skills = (item.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+                const imgHtml = item.img ? `<div style="padding:20px; background:#fff; margin-bottom:15px; border-radius:8px; display:flex; justify-content:center;"><img src="${item.img}" style="max-height:60px; width:auto; border-radius:0;"></div>` : '';
+                const hasLink = item.link && item.link !== '#' && item.link.trim() !== '';
+                const linkHtml = hasLink ? `
+                    <div style="margin-top:15px;">
+                        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="m-card-btn" style="width:100%; justify-content:center;">
+                            ${liveIconSvg} Visit Company Website
+                        </a>
+                    </div>` : '';
+                
+                return `
+                    <div class="m-card">
+                        <div class="m-card-body">
+                            ${imgHtml}
+                            <div class="m-card-title">${item.title}</div>
+                            ${item.date ? `<div style="font-size:0.7rem; font-weight:700; color:var(--muted); margin-bottom:10px; text-transform:uppercase;">${item.date}</div>` : ''}
+                            <div class="m-card-desc">${item.learned || ''}</div>
+                            ${skills.length ? `<div class="m-skills">${skills.map(s => `<span class="m-skill-tag">${s}</span>`).join('')}</div>` : ''}
+                            ${linkHtml}
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
         function renderProjects(items) {
             const el = document.getElementById('m-projects-list');
-            if (!items || !items.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem">No projects yet.</p>'; return; }
+            if (!items || !items.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem">Project details coming soon.</p>'; return; }
             el.innerHTML = items.map(item => {
                 const hasGh = item.link && item.link.includes('github.com');
                 const hasLink = item.link && item.link.trim() !== '' && item.link !== '#';
@@ -605,7 +650,7 @@
 
         function renderCerts(items) {
             const el = document.getElementById('m-certs-list');
-            if (!items || !items.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem">No certifications yet.</p>'; return; }
+            if (!items || !items.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem">Certifications coming soon.</p>'; return; }
             el.innerHTML = items.map((item, idx) => {
                 const isPdf = item.img && item.img.startsWith('data:application/pdf');
                 const certImg = resolveCertImage(item);
@@ -717,53 +762,84 @@
         }
 
         async function init() {
-            document.getElementById('m-nav-name').textContent = MY_CONFIG.name || '';
-            document.getElementById('m-hero-name').textContent = MY_CONFIG.name || '';
-            document.getElementById('m-hero-title').textContent = MY_CONFIG.title || '';
-            document.getElementById('main-title').textContent = MY_CONFIG.pageTitle || MY_CONFIG.name || '';
-
-            document.getElementById('m-img-base').src = MY_CONFIG.heroBaseImage || '';
-            document.getElementById('m-img-hover').src = MY_CONFIG.heroHoverImage || '';
-
-            renderSocials();
-            setupHeroToggle();
-
-            let defaults = { ...EMPTY_DB };
             try {
-                const res = await fetch(MY_CONFIG.dataFile);
-                if (res.ok) defaults = await res.json();
+                if (!localStorage.getItem('v3_initialized')) {
+                    ['portfolio_v1', 'portfolio_v2', 'portfolio_db'].forEach(k => localStorage.removeItem(k));
+                    localStorage.setItem('v3_initialized', 'true');
+                }
+            } catch (e) {}
+
+            try {
+                document.getElementById('m-nav-name').textContent = MY_CONFIG.name || '';
+                document.getElementById('m-hero-name').textContent = MY_CONFIG.name || '';
+                document.getElementById('m-hero-title').textContent = MY_CONFIG.title || '';
+                document.getElementById('main-title').textContent = MY_CONFIG.pageTitle || MY_CONFIG.name || '';
+
+                document.getElementById('m-img-base').src = MY_CONFIG.heroBaseImage || '';
+                document.getElementById('m-img-hover').src = MY_CONFIG.heroHoverImage || '';
+
+                renderSocials();
+                setupHeroToggle();
+
+                let defaults = { ...EMPTY_DB };
+                try {
+                    const res = await fetch(MY_CONFIG.dataFile);
+                    if (res.ok) {
+                        defaults = await res.json();
+                    }
+                } catch (e) {
+                    console.warn('Failed to load portfolio_data.json', e);
+                }
+
+                let db = defaults;
+                try {
+                    const localRaw = localStorage.getItem(MY_CONFIG.storageKey);
+                    const local = localRaw ? JSON.parse(localRaw) : EMPTY_DB;
+                    
+                    // Prioritize remote parity for dynamic sections
+                    db = {
+                        bio: local.bio && Object.keys(local.bio).length ? local.bio : (defaults.bio || {}),
+                        experience: defaults.experience || [],
+                        projects: defaults.projects || [],
+                        certs: defaults.certs || []
+                    };
+                    
+                    localStorage.setItem(MY_CONFIG.storageKey, JSON.stringify(db));
+                } catch (e) {
+                    console.warn('Local sync failed, using remote only.', e);
+                    db = defaults;
+                }
+                
+                const bio = db.bio || {};
+                const name = bio.name || MY_CONFIG.name || '';
+
+                document.getElementById('m-about-name').textContent = name;
+                document.getElementById('m-about-subtitle').textContent = bio.title || MY_CONFIG.title || '';
+                document.getElementById('m-about-desc').textContent = bio.desc || '';
+
+                const aboutImg = document.getElementById('m-about-img');
+                if (bio.img) { aboutImg.src = bio.img; } else { aboutImg.style.display = 'none'; }
+
+                const metaEl = document.getElementById('m-about-meta');
+                if (metaEl) {
+                    const chips = [];
+                    if (bio.loc) chips.push(`<span class="m-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${bio.loc}</span>`);
+                    if (bio.exp) chips.push(`<span class="m-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.9 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>${bio.exp}</span>`);
+                    metaEl.innerHTML = chips.join('');
+                }
+
+                document.getElementById('m-footer-name').textContent = name;
+                document.getElementById('m-footer-copy').textContent = `All rights reserved to ${name}. © ${new Date().getFullYear()}`;
+
+                renderExperience(db.experience);
+                renderProjects(db.projects);
+                renderCerts(db.certs);
+
+                await renderPdfs();
+                setupCertLightbox();
             } catch (e) {
-                console.warn('Failed to load portfolio_data.json', e);
+                console.error('Mobile init failed:', e);
             }
-
-            const localRaw = localStorage.getItem(MY_CONFIG.storageKey);
-            const local = localRaw ? JSON.parse(localRaw) : EMPTY_DB;
-            const db = mergeWithDefaults(local, defaults);
-
-            const bio = db.bio || {};
-            const name = bio.name || MY_CONFIG.name || '';
-
-            document.getElementById('m-about-name').textContent = name;
-            document.getElementById('m-about-subtitle').textContent = bio.title || MY_CONFIG.title || '';
-            document.getElementById('m-about-desc').textContent = bio.desc || '';
-
-            const aboutImg = document.getElementById('m-about-img');
-            if (bio.img) { aboutImg.src = bio.img; } else { aboutImg.style.display = 'none'; }
-
-            const metaEl = document.getElementById('m-about-meta');
-            const chips = [];
-            if (bio.loc) chips.push(`<span class="m-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${bio.loc}</span>`);
-            if (bio.exp) chips.push(`<span class="m-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>${bio.exp}</span>`);
-            metaEl.innerHTML = chips.join('');
-
-            document.getElementById('m-footer-name').textContent = name;
-            document.getElementById('m-footer-copy').textContent = `All rights reserved to ${name}. © ${new Date().getFullYear()}`;
-
-            renderProjects(db.projects);
-            renderCerts(db.certs);
-
-            await renderPdfs();
-            setupCertLightbox();
         }
 
         init();
