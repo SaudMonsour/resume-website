@@ -13,7 +13,7 @@
             "title": "Software Engineer Intern",
             "learned": "Worked as a software engineering intern at Acme Corp. Contributed to the development of a high-traffic e-commerce platform using React and Node.js. Optimized database queries and improved page load times by 20%.",
             "skills": "React, Node.js, PostgreSQL, Git",
-            "date": "Jan 2026 - Present",
+            "date": "Jan 2026 - Jun 2026",
             "link": "https://example.com",
             "img": "my-data/images/example-company.png"
         }
@@ -39,6 +39,14 @@
     "certs": [
         {
             "id": "2001",
+            "title": "Internship Program Certificate",
+            "link": "https://www.example.com/cert",
+            "img": "",
+            "learned": "Successfully completed an internship program from January to June 2026. Gained hands-on experience in enterprise systems, technical operations, and professional development.",
+            "skills": "Enterprise Systems, Operations, Professional Development"
+        },
+        {
+            "id": "2002",
             "title": "AWS Certified Developer – Associate",
             "link": "https://www.credly.com/badges/your-badge-id",
             "img": "",
