@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "welcome-to-my-journal",
+    "title": "Welcome to my journal",
+    "category": "Notes",
+    "kind": "Note",
+    "status": "published",
+    "date": "2026-01-01",
+    "updated": "2026-01-01",
+    "excerpt": "A sample article to demonstrate the journal. Replace it with your own introduction.",
+    "takeaway": "A useful journal starts with one clear idea and an example that makes it concrete.",
+    "body": "## Why I write\n\nThis is example content. Use this space to introduce your interests and explain what readers can expect.\n\n## What you can expect\n\n- Project stories and design decisions\n- Practical guides\n- Notes on lessons learned\n\n## A small example\n\n**Keep the idea clear.** A short code example can help:\n\n```js\nconst greeting = 'Hello, world!';\nconsole.log(greeting);\n```\n\n| Section | Purpose |\n| --- | --- |\n| Projects | Show your work |\n| Guides | Explain an idea |\n| Notes | Share a lesson |",
+    "sources": []
+  },
+  {
+    "slug": "planning-a-small-project",
+    "title": "Planning a small project",
+    "category": "Projects",
+    "kind": "Project note",
+    "status": "published",
+    "date": "2026-01-02",
+    "updated": "2026-01-02",
+    "featured": true,
+    "excerpt": "A sample project note showing headings, figures, source links, and related reading.",
+    "takeaway": "Write down the problem, sketch the flow, and test a small version before expanding it.",
+    "body": "## Start with the problem\n\nDescribe the people you are helping and what they need. Replace this sample with the story of your project.\n\n## Sketch the flow\n\n![A simple flow from idea to prototype to review.](/figures/project-flow.svg)\n\n## Build and review\n\nA first version can be small. Check that its navigation, content, and interaction work together. See the [MDN web documentation](https://developer.mozilla.org/en-US/docs/Web) for practical references [S1].",
+    "sources": [
+      {
+        "label": "S1 — MDN Web Docs",
+        "url": "https://developer.mozilla.org/en-US/docs/Web"
+      }
+    ]
+  }
+]

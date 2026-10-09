@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/blog",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/blog/articles/:slug",
+      "destination": "/blog/articles/:slug.html"
+    },
+    {
+      "source": "/blog/topics/:slug",
+      "destination": "/blog/topics/:slug.html"
+    },
+    {
+      "source": "/blog/:page",
+      "destination": "/blog/:page.html"
+    }
+  ]
+}
+

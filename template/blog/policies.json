@@ -1,0 +1,27 @@
+{
+  "about": {
+    "title": "About this journal",
+    "label": "Journal",
+    "body": "<p>This sample journal accompanies a personal portfolio. Replace this page with your publication’s purpose, audience, and topics.</p>"
+  },
+  "contact": {
+    "title": "Contact and corrections",
+    "label": "Contact",
+    "body": "<p>Replace this sample with your preferred contact method. For a correction, include the article title and the passage you would like reviewed.</p>"
+  },
+  "editorial-policy": {
+    "title": "Editorial approach",
+    "label": "Editorial policy",
+    "body": "<p>Explain how you research, verify, revise, and credit your writing. This is a sample page to customize for your own publication.</p>"
+  },
+  "privacy": {
+    "title": "Privacy information",
+    "label": "Privacy",
+    "body": "<p>This template uses browser storage for local editor drafts and loads fonts and PDF previews from external services. Replace this sample with an accurate description of your deployed site, hosting, analytics, and any other services you add.</p>"
+  },
+  "terms": {
+    "title": "Using this site",
+    "label": "Terms",
+    "body": "<p>Replace this sample with the terms appropriate to your content and intended use.</p>"
+  }
+}

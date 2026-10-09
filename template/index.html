@@ -1,4 +1,4 @@
-<!-- VERSION: 10/10_REVERTED_3E94CD2 | MOBILE: enabled -->
+<!-- Portfolio template: customize my-data/config.js and portfolio_data.json. -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,13 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Loading...</title>
-    <!-- إعدادات الموقع -->
+    <!-- Shared site settings -->
     <script src="my-data/config.js"></script>
     <script>
         (function () {
             var p = new URLSearchParams(location.search);
-            if (!p.get('forceDesktop') && (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 'ontouchstart' in window)) {
-                location.replace('mobile.html');
+            if (!p.get('forceDesktop') && !p.has('admin') && (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 'ontouchstart' in window)) {
+                var anchors = {'#experience':'#m-experience','#projects':'#m-projects','#certificates':'#m-certs','#blog':'#m-blog'};
+                location.replace('mobile.html' + (p.get('preview') === '1' ? '?preview=1' : '') + (anchors[location.hash] || ''));
             }
         })();
     </script>
@@ -26,7 +27,7 @@
     <meta name="color-scheme" content="light">
     <meta name="darkreader-lock" content="true">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <!-- الخطوط المستخدمة -->
+    <!-- Display and body fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -51,15 +52,18 @@
             padding: 0;
             box-sizing: border-box;
             cursor: none;
-            scroll-behavior: smooth;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
             font-family: var(--font-sans);
-            width: 100vw;
+            width: 100%;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -webkit-overflow-scrolling: touch;
@@ -69,7 +73,7 @@
             will-change: transform, opacity;
         }
 
-        /* حركة التحميل أول ما يفتح الموقع */
+        /* Initial loading animation */
         .loader {
             position: fixed;
             top: 0;
@@ -88,7 +92,7 @@
             transform: translateY(-100%);
         }
 
-        /* تنسيق الخطوط والقائمة فوق */
+        /* Typography and navigation */
         .header-name {
             position: absolute;
             top: 60px;
@@ -154,7 +158,7 @@
             transform-origin: left;
         }
 
-        /* القسم الرئيسي العلوي (Hero) */
+        /* Hero identity and portrait */
         .hero {
             position: relative;
             width: 100%;
@@ -206,7 +210,7 @@
             scale: 1;
         }
 
-        /* أيقونات التواصل الاجتماعي */
+        /* Optional social links */
         .footer-socials {
             position: absolute;
             bottom: 60px;
@@ -247,7 +251,26 @@
             letter-spacing: -0.04em;
         }
 
+
+
         /* Dynamic Item Layout */
+        #blog { background: var(--bg-secondary); scroll-margin-top: 24px; }
+        #blog .section-title { margin-bottom: 48px; }
+        .blog-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; border-top: 1px solid #d8d8d8; padding-top: 40px; }
+        .blog-label { font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 18px; }
+        .blog-title { font-family: var(--font-serif); font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 400; line-height: 1.15; letter-spacing: -.03em; margin-bottom: 24px; }
+        .blog-description { font-size: 1rem; line-height: 1.8; color: #444; max-width: 52ch; }
+        .blog-open { display: inline-flex; align-items: center; min-height: 48px; padding: 14px 24px; margin-top: 28px; background: #000; color: #fff; font-size: .9rem; font-weight: 600; text-decoration: none; }
+        .blog-access { margin-top: 14px; font-size: .875rem; line-height: 1.5; color: #666; }
+        .blog-topics { list-style: none; }
+        .blog-topic { display: block; padding: 22px 0; border-bottom: 1px solid #d8d8d8; color: #000; text-decoration: none; }
+        .blog-topics li:first-child .blog-topic { padding-top: 0; }
+        .blog-topic strong { display: block; font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
+        .blog-topic span { display: block; font-size: 1rem; line-height: 1.65; color: #555; }
+        .blog-topic:hover strong { text-decoration: underline; text-underline-offset: 5px; }
+        .blog-open:focus-visible, .blog-topic:focus-visible { outline: 2px solid #000; outline-offset: 5px; }
+        @media (max-width: 900px) { .blog-layout { grid-template-columns: 1fr; gap: 40px; } }
+
         .items-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -326,6 +349,13 @@
             line-height: 1.1;
         }
 
+        .card-title-ampersand {
+            font-family: var(--font-sans);
+            font-size: 0.82em;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
         .item-link {
             color: var(--text-primary);
             text-decoration: none;
@@ -384,7 +414,7 @@
             border-color: #000;
         }
 
-        /* أزرار إجراءات المشاريع */
+        /* Project action buttons */
         .project-actions {
             display: flex;
             gap: 12px;
@@ -443,7 +473,7 @@
             transition: transform 0.1s;
         }
 
-        /* نافذة تكبير الشهادات */
+        /* Certificate image preview */
         #cert-lightbox {
             position: fixed;
             top: 0;
@@ -508,7 +538,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* About Overlay Modal */
+
 
         /* Footer */
         .site-footer {
@@ -652,98 +682,6 @@
                 text-align: center;
                 justify-content: center;
             }
-        }
-
-        #about-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--modal-bg);
-            z-index: 1500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        #about-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .about-modal {
-            width: 95%;
-            max-width: 550px;
-            display: block;
-            padding: 50px;
-            background: #fff;
-            border-radius: 32px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
-            transform: translateY(40px);
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow-y: auto;
-            max-height: 85vh;
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* IE and Edge */
-        }
-
-        .about-modal::-webkit-scrollbar {
-            display: none;
-            /* Chrome, Safari and Opera */
-        }
-
-        #about-overlay.active .about-modal {
-            transform: translateY(0);
-        }
-
-        .about-close {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-            z-index: 10;
-        }
-
-        .about-close:hover {
-            opacity: 1;
-        }
-
-        .about-text-box h2 {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            margin-bottom: 5px;
-            font-weight: 400;
-            line-height: 1.1;
-        }
-
-        .about-text-box h3 {
-            font-size: 0.85rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            opacity: 0.6;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-
-        .about-text-box p {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            white-space: pre-line;
         }
 
         /* Admin Dashboard */
@@ -1216,7 +1154,6 @@
         .reveal-gate {
             opacity: 1;
             transform: none;
-            will-change: transform, opacity;
         }
 
         /* Animation ONLY on real desktop (mouse pointer, hover capable) */
@@ -1224,6 +1161,7 @@
             .reveal-gate {
                 opacity: 0;
                 transform: translateY(40px) scale(0.97);
+                will-change: transform, opacity;
                 transition: opacity 0.9s cubic-bezier(0.2, 1, 0.2, 1),
                     transform 0.9s cubic-bezier(0.2, 1, 0.2, 1);
                 animation: fallbackShow 0.1s 3s forwards;
@@ -1234,6 +1172,20 @@
             .reveal-gate.active {
                 opacity: 1 !important;
                 transform: translateY(0) scale(1) !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
 
@@ -1310,7 +1262,7 @@
                 margin-top: 8px;
             }
 
-            /* On mobile, show ABOUT + socials as one row at bottom */
+            /* On mobile, show navigation and socials as one row at bottom */
             .header-nav {
                 top: auto;
                 bottom: 30px;
@@ -1426,7 +1378,7 @@
             }
         }
 
-        /* HOTFIX overrides for mobile requested adjustments */
+        /* Mobile visibility and social-link positioning */
         @media (max-width: 768px) {
             .footer-socials {
                 bottom: 30px !important;
@@ -1434,7 +1386,7 @@
                 gap: 15px !important;
                 z-index: 20 !important;
             }
-            /* Bulletproof fix for iOS Safari: force items visible, no animation */
+            /* Keep cards visible on touch devices, including iOS Safari. */
             .reveal-gate {
                 opacity: 1 !important;
                 transform: none !important;
@@ -1450,13 +1402,6 @@
     <div id="cursor-main"></div>
     <div id="cursor-follow"></div>
 
-    <!-- About Overlay -->
-    <div id="about-overlay">
-        <div class="about-modal">
-            <span class="about-close" id="about-close-btn">&times;</span>
-            <div id="render-about"></div>
-        </div>
-    </div>
 
     <!-- Admin Panel -->
     <aside id="admin-panel">
@@ -1464,7 +1409,7 @@
             <h3>Dashboard</h3><span class="admin-close" id="adm-close">&times;</span>
         </div>
         <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 30px; line-height: 1.5;">Manage your professional
-            narrative here. Changes persist instantly.</p>
+            narrative here. Changes are browser drafts. Export JSON to publish them.</p>
 
         <div class="admin-tabs">
             <span class="admin-tab active" data-target="adm-about">Biography</span>
@@ -1577,10 +1522,10 @@
             <h1 id="hero-name"><span></span></h1>
         </div>
         <nav class="header-nav">
-            <a id="nav-about" class="nav-link hover-target">ABOUT</a>
             <a href="#experience" class="nav-link hover-target">EXPERIENCE</a>
             <a href="#projects" class="nav-link hover-target">PROJECTS</a>
             <a href="#certificates" class="nav-link hover-target">CERTIFICATIONS</a>
+            <a href="#blog" class="nav-link hover-target">BLOG</a>
         </nav>
         <div class="hero-image-container hover-target will-animate">
             <img src="" alt="Hero Base" class="hero-image img-base" id="hero-img"
@@ -1609,6 +1554,20 @@
         <div class="items-grid" id="render-certs"></div>
     </section>
 
+    <section id="blog" aria-labelledby="blog-heading">
+        <h2 class="section-title" id="blog-heading">Blog</h2>
+        <div class="blog-layout">
+            <div>
+                <p class="blog-label" data-blog-label>Notes &amp; ideas</p>
+                <h3 class="blog-title">My journal</h3>
+                <p class="blog-description">Projects, lessons, and ideas from my work.</p>
+                <a class="blog-open hover-target" href="blog/index.html">Read the blog</a>
+                <p class="blog-access">Read the articles freely. No sign-in required.</p>
+            </div>
+            <ul class="blog-topics" aria-label="Blog topics"><!-- Topic links are populated from MY_CONFIG.blog.topics. --></ul>
+        </div>
+    </section>
+
     <!-- Professional Footer -->
     <footer class="site-footer">
         <div class="footer-grid">
@@ -1627,15 +1586,15 @@
                     <li><a href="#experience" class="c-hover">Experience</a></li>
                     <li><a href="#projects" class="c-hover">Projects</a></li>
                     <li><a href="#certificates" class="c-hover">Certifications</a></li>
-                    <li><a href="#" id="ft-nav-about" class="c-hover">About Me</a></li>
+                    <li><a href="#blog" class="c-hover">Blog</a></li>
                 </ul>
             </div>
 
-            <!-- العمود الثالث: التواصل (في حال التوفر) -->
+            <!-- Optional contact links -->
             <div class="footer-col">
                 <h5 style="margin-top: 0;">Contact</h5>
                 <ul class="footer-links" id="ft-contact-links">
-                    <!-- روابط التواصل الديناميكية -->
+                    <!-- Contact links from configuration -->
                 </ul>
             </div>
         </div>
@@ -1644,31 +1603,31 @@
             <p id="ft-copyright"></p>
         </div>
     </footer>
-    <!-- نافذة تكبير صور الشهادات -->
+    <!-- Certificate image lightbox -->
     <div id="cert-lightbox" onclick="this.classList.remove('active')">
         <span class="lightbox-close">&times;</span>
         <img src="" alt="Certificate Preview"
             onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback) this.src = this.dataset.fallback;">
     </div>
 
-    <!-- نافذة طلب رمز المرور (الباسورد) -->
+    <!-- Convenience gate for the browser-only content editor -->
     <div id="passcode-overlay">
         <div class="passcode-box">
-            <h4>Security Check</h4>
-            <p>Please enter your administration code to access the dashboard.</p>
+            <h4>Content Editor</h4>
+            <p>Enter the editor code configured for this site.</p>
             <input type="password" class="passcode-input" id="auth-code" placeholder="••••••••">
             <div id="auth-error" style="color:#ff3b30; font-size:0.7rem; margin-bottom:15px; display:none;">Incorrect
                 code. Try again.</div>
-            <button class="btn btn-black" id="auth-submit">Verify Identity</button>
+            <button class="btn btn-black" id="auth-submit">Open Editor</button>
             <div style="margin-top:15px;"><span class="manage-link" id="auth-cancel">Cancel</span></div>
         </div>
     </div>
 
     <script>
-        // تشغيل مكتبة pdf.js عشان نقدر نعرض ملفات الـ PDF كصور
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        // Use PDF.js to preview uploaded certificate PDFs.
+        if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        // دالة تحول ملف الـ PDF لصورة عشان تظهر بشكل مرتب في الموقع
+        // Render the first PDF page as a certificate thumbnail.
         async function renderPdfToCanvas(dataUri, canvas) {
             try {
                 const base64 = dataUri.replace(/^data:application\/pdf;base64,/, '');
@@ -1683,14 +1642,14 @@
                 const containerWidth = container.clientWidth || 500;
                 const unscaledViewport = page.getViewport({ scale: 1 });
 
-                // تكبير الابعاد للحد الاقصى (عرض 2000 بكسل) لدعم الشاشات عالية الدقة (Retina) وزيادة الوضوح
+                // Render at high resolution for sharp certificate previews.
                 const renderScale = 2000 / unscaledViewport.width;
                 const viewport = page.getViewport({ scale: renderScale });
 
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
 
-                // تصغير العرض باستخدام CSS للحفاظ على تخطيط الصفحة مع بقاء الدقة عالية
+                // Keep the thumbnail responsive while preserving its resolution.
                 canvas.style.width = '100%';
                 canvas.style.height = 'auto';
 
@@ -1704,67 +1663,45 @@
         }
 
         const EMPTY_DB = { bio: {}, experience: [], projects: [], certs: [] };
+        const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+        const formatCardTitle = (value = '') =>
+            escapeHtml(value).replace(
+                /\s+&amp;\s+/g,
+                '&nbsp;<span class="card-title-ampersand">&amp;</span>&nbsp;'
+            );
         let storeCache = null;
 
-        const mergeItemsByKey = (existingItems = [], defaultItems = [], key = 'id') => {
-            const merged = Array.isArray(existingItems) ? [...existingItems] : [];
-            // Match primarily by ID, fallback to TITLE for older entries
-            const seenIds = new Set(merged.map(item => (item?.id || '').toString()).filter(Boolean));
-            const seenTitles = new Set(merged.map(item => (item?.title || '').toLowerCase().trim()).filter(Boolean));
-
-            (Array.isArray(defaultItems) ? defaultItems : []).forEach(item => {
-                const idString = (item?.id || '').toString();
-                const titleLower = (item?.title || '').toLowerCase().trim();
-                
-                if (idString && !seenIds.has(idString) && !seenTitles.has(titleLower)) {
-                    merged.push(item);
-                    seenIds.add(idString);
-                    seenTitles.add(titleLower);
-                }
-            });
-            return merged;
-        };
-
-        const mergeWithDefaults = (data = {}, defaults = EMPTY_DB) => ({
-            bio: data.bio && Object.keys(data.bio).length ? data.bio : (defaults.bio || {}),
-            experience: mergeItemsByKey(data.experience, defaults.experience),
-            projects: mergeItemsByKey(data.projects, defaults.projects),
-            certs: mergeItemsByKey(data.certs, defaults.certs)
-        });
-
+        const draftKey = MY_CONFIG.storageKey + ':draft';
+        const isDraftView = new URLSearchParams(location.search).has('admin') || new URLSearchParams(location.search).get('preview') === '1';
         const Store = {
-            db: () => storeCache || JSON.parse(localStorage.getItem(MY_CONFIG.storageKey)) || EMPTY_DB,
+            db: () => storeCache || EMPTY_DB,
             save(data) {
                 storeCache = data;
-                localStorage.setItem(MY_CONFIG.storageKey, JSON.stringify(data));
+                try { localStorage.setItem(draftKey, JSON.stringify(data)); }
+                catch (error) { console.warn('Draft storage unavailable; export before closing this page.', error); }
                 renderAll();
             },
             async init() {
-                let defaults = { ...EMPTY_DB };
+                let published = { ...EMPTY_DB };
                 try {
-                    const res = await fetch(MY_CONFIG.dataFile);
-                    if (res.ok) defaults = await res.json();
-                } catch (err) {
-                    console.warn('Default JSON load failed, using local/empty data.', err);
-                }
-
-                try {
-                    // Always overwrite dynamic sections with remote data for parity
-                    let localData = JSON.parse(localStorage.getItem(MY_CONFIG.storageKey)) || EMPTY_DB;
-                    
-                    // We only preserve 'bio' if it exists locally, but overwrite everything else
-                    storeCache = {
-                        bio: localData.bio && Object.keys(localData.bio).length ? localData.bio : (defaults.bio || {}),
-                        experience: defaults.experience || [],
-                        projects: defaults.projects || [],
-                        certs: defaults.certs || []
-                    };
-                    
-                    localStorage.setItem(MY_CONFIG.storageKey, JSON.stringify(storeCache));
-                    console.log('Store initialized with remote parity');
-                } catch (e) {
-                    console.error("Store initialization failed", e);
-                    storeCache = defaults;
+                    const response = await fetch(MY_CONFIG.dataFile, { cache: 'no-store' });
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    published = await response.json();
+                } catch (error) { console.warn('Could not load portfolio data.', error); }
+                storeCache = published;
+                // Only explicit editor/preview views use the browser draft.
+                // Replacing entire collections preserves intentional deletions.
+                if (isDraftView) {
+                    try {
+                        const draft = JSON.parse(localStorage.getItem(draftKey));
+                        if (draft) storeCache = { ...published, ...draft };
+                    } catch (error) { console.warn('Could not read draft.', error); }
                 }
             }
         };
@@ -1825,23 +1762,13 @@
             .replace(/(^-|-$)/g, '');
 
         const resolveCertImage = (item = {}) => {
-            const slug = toCertSlug(item.title || 'certificate');
-            let primaryRaw = '';
-            if (item.img) {
-                if (item.img.startsWith('data:') || item.img.startsWith('http')) {
-                    primaryRaw = item.img;
-                } else {
-                    primaryRaw = `my-data/images/certs/${item.img}`;
-                }
-            } else {
-                primaryRaw = `${CERT_IMAGE_BASE_URL}/${slug}.png`;
-            }
-            // Only strip whitespace if it's a relative path to avoid performance issues with large data URIs
-            const primary = (primaryRaw.startsWith('data:') || primaryRaw.startsWith('http')) ? primaryRaw : primaryRaw.replace(/\s+/g, '');
-            return {
-                primary: primary,
-                fallback: 'https://via.placeholder.com/800x450?text=Certificate'
-            };
+            const raw = String(item.img || '');
+            const fallback = 'my-data/images/certificate-placeholder.svg';
+            const primary = /^(?:https?:|data:image\/|data:application\/pdf)/i.test(raw) ? raw
+                : raw.startsWith('my-data/') || raw.startsWith('./') ? raw
+                : raw ? 'my-data/images/certs/' + raw
+                : CERT_IMAGE_BASE_URL ? CERT_IMAGE_BASE_URL.replace(/\/$/, '') + '/' + toCertSlug(item.title) + '.png' : fallback;
+            return { primary, fallback };
         };
 
         const fetchReadmeSummary = async (owner, repo) => {
@@ -1894,7 +1821,7 @@
             document.getElementById('f-item-title').value = r.name.replace(/-/g, ' ').replace(/_/g, ' ').toUpperCase();
             document.getElementById('f-item-link').value = r.html_url;
             document.getElementById('f-item-learned').value = summary;
-            document.getElementById('f-item-skills').value = r.language || 'Data Science, Python';
+            document.getElementById('f-item-skills').value = r.language || 'Software Development';
             document.getElementById('gh-import-zone').classList.remove('active');
             alert('Project details transferred! Now, select an image and click "Save to Site" to finalize.');
         };
@@ -1902,16 +1829,6 @@
         function renderAll() {
             try {
                 const d = Store.db();
-            // نحدث معلومات قسم "عني" في الصفحة من البيانات الموجودة
-            document.getElementById('render-about').innerHTML = `
-                <div style="display:block">
-                    <div class="about-text-box">
-                        <h2>${d.bio.name || MY_CONFIG.name || 'Your Name'}</h2>
-                        <h3>${d.bio.title}</h3>
-                        <p>${d.bio.desc}</p>
-                    </div>
-                </div>`;
-
             document.getElementById('f-ab-head').value = d.bio.title || '';
             document.getElementById('f-ab-bio').value = d.bio.desc || '';
             document.getElementById('f-ab-img').value = d.bio.img || '';
@@ -1920,12 +1837,12 @@
             if (d.bio.img) document.getElementById('pv-ab-img').innerHTML = `<img src="${d.bio.img}">`;
 
             // Footer Brand Update
-            const myName = d.bio.name || MY_CONFIG.name || 'Your Name';
+            const myName = MY_CONFIG.name || d.bio.name || 'Your Name';
             document.getElementById('ft-name').innerText = myName;
             document.getElementById('ft-copyright').innerHTML = `All rights reserved to ${myName}. © ${new Date().getFullYear()}`;
 
 
-            // دالة ترسم الخبرات
+            // Initialize the corresponding portfolio control.
             const renderExperience = (items) => {
                 if (!items || !items.length) {
                     document.getElementById('render-experience').innerHTML = '<p class="no-items">Experience details coming soon.</p>';
@@ -1953,10 +1870,10 @@
                         <div class="dynamic-item${hasImage ? '' : ' no-image'} reveal-gate" style="transition-delay: ${index * 0.08}s">
                             ${hasImage ? `<div class="item-image" style="background:#fff; padding:30px; display:flex; align-items:center; justify-content:center;">${thumb}</div>` : ''}
                             <div class="item-content">
-                                <h3>${i.title}</h3>
-                                ${i.date ? `<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 15px; text-transform: uppercase;">${i.date}</div>` : ''}
-                                <div class="item-meta"><h4>Role & Description</h4><p>${i.learned}</p></div>
-                                ${skillTags.length ? `<div class="skills-wrap">${skillTags.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>` : ''}
+                                <h3>${formatCardTitle(i.title)}</h3>
+                                ${i.date ? `<div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 15px; text-transform: uppercase;">${escapeHtml(i.date)}</div>` : ''}
+                                <div class="item-meta"><h4>Role & Description</h4><p>${escapeHtml(i.learned)}</p></div>
+                                ${skillTags.length ? `<div class="skills-wrap">${skillTags.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>` : ''}
                                 ${actionButtons}
                             </div>
                         </div>
@@ -1968,7 +1885,7 @@
             const _isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
                 || ('ontouchstart' in window);
 
-            // دالة ترسم المشاريع في الصفحة وتضيف أزرار الروابط (GitHub أو Live Project)
+            // Render project cards with repository or live-site actions.
             const renderProjects = (items) => {
                 if (!items || !items.length) {
                     document.getElementById('render-projects').innerHTML = '<p class="no-items">Project details coming soon.</p>';
@@ -2005,9 +1922,9 @@
                         <div class="dynamic-item${hasImage ? '' : ' no-image'} reveal-gate"${_isMobileDevice ? '' : ` style="transition-delay: ${index * 0.08}s"`}>
                             ${hasImage ? `<div class="item-image">${thumb}</div>` : ''}
                             <div class="item-content">
-                                <h3>${i.title}</h3>
-                                <div class="item-meta"><h4>Description</h4><p>${i.learned}</p></div>
-                                ${skillTags.length ? `<div class="skills-wrap">${skillTags.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>` : ''}
+                                <h3>${formatCardTitle(i.title)}</h3>
+                                <div class="item-meta"><h4>Description</h4><p>${escapeHtml(i.learned)}</p></div>
+                                ${skillTags.length ? `<div class="skills-wrap">${skillTags.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>` : ''}
                                 ${actionButtons}
                             </div>
                         </div>
@@ -2015,7 +1932,7 @@
                 }).join('');
             };
 
-            // دالة ترسم الشهادات، وإذا كانت PDF تحولها لصورة أولاً
+            // Render certificate cards; preview uploaded PDFs using a canvas.
             const renderCerts = (items) => {
                 if (!items || !items.length) {
                     document.getElementById('render-certs').innerHTML = '<p class="no-items">Certifications content coming soon.</p>';
@@ -2028,7 +1945,7 @@
                     const thumb = isPdf ? `
                         <div class="pdf-badge">
                             <canvas id="${canvasId}" data-pdf="${i.img}"></canvas>
-                        </div>` : `<img src="${certImage.primary}" onerror="this.src='${certImage.fallback}'; this.closest('.cert-clickable').dataset.certSrc='${certImage.fallback}';">`;
+                        </div>` : `<img src="${certImage.primary}" onerror="this.onerror=null; this.src='${certImage.fallback}'; this.closest('.cert-clickable').dataset.certSrc='${certImage.fallback}';">`;
 
                     const certSkills = (i.skills || '').split(',').map(s => s.trim()).filter(s => s.length > 0);
 
@@ -2045,9 +1962,9 @@
                         <div class="dynamic-item reveal-gate"${_isMobileDevice ? '' : ` style="transition-delay: ${index * 0.08}s"`}>
                             <div class="item-image cert-clickable" data-cert-src="${isPdf ? '' : certImage.primary}" data-cert-fallback="${certImage.fallback}">${thumb}</div>
                             <div class="item-content">
-                                <h3>${i.title}</h3>
-                                <div class="item-meta"><h4>The Insight</h4><p>${i.learned}</p></div>
-                                ${certSkills.length ? `<div class="skills-wrap">${certSkills.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>` : ''}
+                                <h3>${formatCardTitle(i.title)}</h3>
+                                <div class="item-meta"><h4>The Insight</h4><p>${escapeHtml(i.learned)}</p></div>
+                                ${certSkills.length ? `<div class="skills-wrap">${certSkills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>` : ''}
                                 ${verifyBtn}
                             </div>
                         </div>
@@ -2059,16 +1976,16 @@
             renderProjects(d.projects);
             renderCerts(d.certs);
 
-            // تحويل PDFs إلى صور بـ pdf.js
+            // Render PDF thumbnails after their canvases exist.
             document.querySelectorAll('.pdf-badge canvas[data-pdf]').forEach(canvas => {
                 renderPdfToCanvas(canvas.dataset.pdf, canvas);
             });
 
-            // تفعيل الضغط على الشهادة لتكبيرها
+            // Open certificate images in the lightbox.
             document.querySelectorAll('.cert-clickable').forEach(el => {
                 el.onclick = () => {
                     let src = el.dataset.certSrc;
-                    // أولاً: لو لسا ما في صورة (مثلاً الشهادة PDF)، نحول الـ canvas لصورة
+                    // Use the rendered canvas for an uploaded PDF.
                     if (!src) {
                         const canvas = el.querySelector('canvas');
                         if (canvas) {
@@ -2079,7 +1996,7 @@
                             }
                         }
                     }
-                    // ثانياً: لو الصورة لسا فاضية، نجرب الـ fallback
+                    // Use the local placeholder when an image is unavailable.
                     if (!src) {
                         const fallback = el.dataset.certFallback;
                         if (fallback && !fallback.startsWith('data:application/pdf')) {
@@ -2115,7 +2032,7 @@
         }
 
         window.editItem = (type, id) => {
-            const i = Store.db()[type].find(x => x.id === id);
+            const i = Store.db()[type].find(x => String(x.id) === String(id));
             document.querySelectorAll('.admin-tab, .admin-form').forEach(el => el.classList.remove('active'));
             document.querySelector(`[data-target="adm-${type}"]`).classList.add('active');
             document.getElementById('adm-item-form-container').classList.add('active');
@@ -2134,20 +2051,13 @@
             if (i.img) document.getElementById('pv-item-img').innerHTML = `<img src="${i.img}">`;
         };
 
-        // تحكم نافذة تكبير الشهادات
+        // Close the certificate preview.
         const certLightbox = document.getElementById('cert-lightbox');
         certLightbox.onclick = (e) => {
             if (e.target === certLightbox || e.target.classList.contains('lightbox-close')) {
                 certLightbox.classList.remove('active');
             }
         };
-
-        // About Modal Control
-        const aboutOverlay = document.getElementById('about-overlay');
-        document.getElementById('nav-about').onclick = () => aboutOverlay.classList.add('active');
-        document.getElementById('ft-nav-about').onclick = (e) => { e.preventDefault(); aboutOverlay.classList.add('active'); }
-        document.getElementById('about-close-btn').onclick = () => aboutOverlay.classList.remove('active');
-        aboutOverlay.onclick = (e) => { if (e.target === aboutOverlay) aboutOverlay.classList.remove('active'); };
 
         // Spotlight Tracker has been unified into the main loop() below for better performance.
 
@@ -2212,7 +2122,7 @@
         document.getElementById('form-about').onsubmit = (e) => {
             e.preventDefault();
             const d = Store.db();
-            d.bio = { title: document.getElementById('f-ab-head').value, desc: document.getElementById('f-ab-bio').value, img: document.getElementById('f-ab-img').value, loc: document.getElementById('f-ab-loc').value, exp: document.getElementById('f-ab-exp').value };
+            d.bio = { ...d.bio, title: document.getElementById('f-ab-head').value, desc: document.getElementById('f-ab-bio').value, img: document.getElementById('f-ab-img').value, loc: document.getElementById('f-ab-loc').value, exp: document.getElementById('f-ab-exp').value };
             Store.save(d); alert('Bio Saved.');
         };
 
@@ -2227,7 +2137,7 @@
             const formatM = v => { if(!v) return ''; const p = v.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1],10)-1] + ' ' + p[0]; };
             const finalDate = sD ? `${formatM(sD)} - ${isP ? 'Present' : (eD ? formatM(eD) : 'Present')}` : '';
             const item = { id: id ? parseInt(id) : Date.now(), title: document.getElementById('f-item-title').value, link: document.getElementById('f-item-link').value, img: document.getElementById('f-item-img').value, date: finalDate, sDate: sD, eDate: eD, isPresent: isP, learned: document.getElementById('f-item-learned').value, skills: document.getElementById('f-item-skills').value };
-            if (id) { const idx = d[type].findIndex(x => x.id === parseInt(id)); d[type][idx] = item; } else d[type].push(item);
+            if (id) { const idx = d[type].findIndex(x => String(x.id) === String(id)); d[type][idx] = item; } else d[type].push(item);
             Store.save(d); e.target.reset(); document.getElementById('f-item-id').value = '';
             document.getElementById('f-item-end-date').disabled = false;
         };
@@ -2235,7 +2145,7 @@
         window.delItem = (type, id) => {
             if (confirm('Are you sure you want to delete this item?')) {
                 const d = Store.db();
-                d[type] = d[type].filter(x => x.id !== id);
+                d[type] = d[type].filter(x => String(x.id) !== String(id));
                 Store.save(d);
             }
         };
@@ -2319,37 +2229,20 @@
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Force reset if upgrading to portfolio_v3 or if data looks corrupted
-            try {
-                if (!localStorage.getItem('v3_initialized')) {
-                    ['portfolio_v1', 'portfolio_v2', 'portfolio_db'].forEach(k => localStorage.removeItem(k));
-                    localStorage.setItem('v3_initialized', 'true');
-                }
-            } catch (e) {}
-
-            // تهيئة من ملف الإعدادات
+            // Populate identity and portrait images from config.js.
             document.getElementById('main-title').innerText = MY_CONFIG.pageTitle;
-            document.getElementById('hero-name').innerHTML = `${MY_CONFIG.name}<span>${MY_CONFIG.title}</span>`;
+            document.getElementById('hero-name').innerHTML = `${escapeHtml(MY_CONFIG.name)}<span>${escapeHtml(MY_CONFIG.title)}</span>`;
             document.getElementById('hero-img').src = resolveImagePath(MY_CONFIG.heroBaseImage);
             document.getElementById('hero-img-hover').src = resolveImagePath(MY_CONFIG.heroHoverImage);
 
-            const navAbout = document.getElementById('nav-about');
-            if (navAbout) {
-                navAbout.addEventListener('click', () => document.getElementById('about-overlay')?.classList.add('active'));
-            }
-            const aboutClose = document.getElementById('about-close-btn');
-            if (aboutClose) {
-                aboutClose.addEventListener('click', () => document.getElementById('about-overlay')?.classList.remove('active'));
-            }
-
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
-                    if (this.hash && this.hash !== '#' && this.hash !== '#about-overlay') {
+                    if (this.hash && this.hash !== '#' && this.hash !== '#') {
                         e.preventDefault();
                         const target = document.querySelector(this.hash);
                         if (target) {
                             target.scrollIntoView({ behavior: 'smooth' });
-                            window.history.pushState(null, null, window.location.origin + window.location.pathname);
+                            window.history.pushState(null, null, this.hash);
                         }
                     }
                 });
@@ -2372,14 +2265,15 @@
             if (MY_CONFIG.socials.email) {
                 const emIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`;
                 const mailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${MY_CONFIG.socials.email}`;
-                socialsHtml.push(`<a href="${mailUrl}" target="_blank" class="social-icon hover-target">${emIcon}</a>`);
-                footerSocialsHtml.push(`<a href="${mailUrl}" target="_blank" class="hover-target" aria-label="Email">${emIcon}</a>`);
-                footerContactHtml.push(`<li><a href="${mailUrl}" target="_blank" class="c-hover">Email Me</a></li>`);
+                const onClk = `window.openGmailApp(event, '${MY_CONFIG.socials.email}')`;
+                socialsHtml.push(`<a href="#" onclick="${onClk}" class="social-icon hover-target">${emIcon}</a>`);
+                footerSocialsHtml.push(`<a href="#" onclick="${onClk}" class="hover-target" aria-label="Email">${emIcon}</a>`);
+                footerContactHtml.push(`<li><a href="#" onclick="${onClk}" class="c-hover">Email Me</a></li>`);
             }
             document.getElementById('render-socials').innerHTML = socialsHtml.join('');
             document.getElementById('ft-socials').innerHTML = footerSocialsHtml.join('');
             document.getElementById('ft-contact-links').innerHTML = footerContactHtml.join('');
-            // Populate mobile nav socials (shown inline next to ABOUT on mobile)
+            // Populate mobile nav socials (shown inline next to the navigation links on mobile)
             const mobileNavSocials = document.getElementById('mobile-nav-socials');
             if (mobileNavSocials) mobileNavSocials.innerHTML = socialsHtml.join('');
 
@@ -2393,8 +2287,12 @@
             if (heroImg) heroImg.classList.add('loaded');
 
             await Store.init(); renderAll(); checkAuth();
+            if (location.hash) {
+                const anchor = document.getElementById(location.hash.slice(1));
+                if (anchor) requestAnimationFrame(() => anchor.scrollIntoView({behavior:'instant'}));
+            }
 
-            // الكيرسر المخصص بس للأجهزة اللي فيها ماوس
+            // Enable the custom cursor only for devices with a mouse.
             let mx = 0, my = 0, cx = 0, cy = 0, fx = 0, fy = 0;
 
             const heroBox = document.querySelector('.hero-image-container');
@@ -2444,6 +2342,9 @@
 
         });
     </script>
+    <!-- Shared template settings: optional blog and desktop resume viewer. -->
+    <script src="site.js"></script>
 </body>
 
 </html>
+

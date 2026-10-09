@@ -1,185 +1,125 @@
 # Portfolio Template
 
-A professional open-source portfolio with a purpose-built mobile experience.  
-Zero frameworks. Zero build tools. Pure HTML, CSS, and JavaScript — just ship it.
+A customizable portfolio, printable résumé, and optional journal built with HTML, CSS, and JavaScript. Desktop and mobile share the same configuration and portfolio data. The template includes neutral image placeholders and fictional sample content.
 
----
+## Start locally
 
-## What's included
+Use a current Node.js LTS release. From this folder:
 
-| File | Purpose |
-|---|---|
-| `index.html` | Desktop portfolio — animated, spotlight cursor, scroll-reveal cards |
-| `mobile.html` | Mobile portfolio — purpose-built for phones, auto-loaded on touch devices |
-| `my-data/config.js` | **The only file you must edit** — your name, images, links, passwords |
-| `my-data/portfolio_data.json` | Sample projects and certifications — replace with your own |
-| `my-data/images/` | Put your profile photos here |
-
----
-
-## Quick Start
-
-### Step 1 — Get the files
-
-Download or clone this `/template` folder. You only need these files:
-
-```
-template/
-├── index.html
-├── mobile.html
-├── my-data/
-│   ├── config.js          ← edit this
-│   ├── portfolio_data.json
-│   └── images/            ← put your photos here
-└── README.md
+```sh
+npm run dev
 ```
 
-### Step 2 — Edit `my-data/config.js`
+Open `http://localhost:5000`. The server uses only Node’s built-in modules; no package installation is required. Use an HTTP server rather than opening the HTML files directly, because the pages fetch JSON.
 
-This is the only file you need to touch to make the site yours:
+## Make it yours
 
-```js
-const MY_CONFIG = {
-    name: "Jane Doe",
-    title: "Full Stack Developer",
-    pageTitle: "Jane Doe | Full Stack Developer",
+1. Edit `my-data/config.js`: name, title, social links, portrait filenames, and site URL. Its comments explain each setting.
+2. Replace the placeholder portraits in `my-data/images/` with your own photos. One photo can serve both portrait settings.
+3. Edit `my-data/portfolio_data.json`: experience, projects, certificates, and optional résumé details. All supplied entries are examples.
+4. Customize the journal settings and articles, or set `blog.enabled` to `false` to hide its portfolio links.
+5. Run `npm run build:blog` after changing your identity, site URL, journal settings, articles, or journal policy pages. Commit the generated files with your source changes.
 
-    heroBaseImage: "./my-data/images/me.jpg",   // always visible
-    heroHoverImage: "./my-data/images/me2.jpg", // shows on desktop hover / mobile tap
+There is no public About Me section. Biography data is retained for the printable résumé and editor.
 
-    socials: {
-        github: "https://github.com/yourusername",
-        linkedin: "https://linkedin.com/in/yourprofile",
-        email: "you@example.com"   // just the address, no "mailto:"
-    },
+## Files
 
-    githubUsername: "yourusername",  // for importing repos in the admin dashboard
+| Path | Purpose |
+| --- | --- |
+| `index.html` | Desktop layout, reveal animation, custom cursor, certificate preview, local editor |
+| `mobile.html` | Mobile layout, portrait toggle, certificate preview, résumé modal |
+| `site.js` | Shared journal customization and desktop résumé viewer |
+| `resume.html` | Data-driven résumé with an A4 print / Save as PDF action |
+| `my-data/config.js` | Commented site settings |
+| `my-data/portfolio_data.json` | Portfolio content and résumé details |
+| `blog/articles.json` | Journal source articles |
+| `blog/policies.json` | Sample journal information pages to customize |
+| `scripts/build-blog.js` | Generates articles, topics, search listings, RSS, and sitemap |
+| `scripts/sync_github_projects.py` | Optional public GitHub project importer |
+| `server.js` / `vercel.json` | Local preview and optional clean blog routes |
+| `tests/` | Checks for configuration, links, script syntax, and journal generation |
 
-    adminPassword: "ChangeMe123!",   // dashboard login password — keep it private
-    adminUrlKey: "mysecretkey",      // visit /?admin=mysecretkey to open dashboard
-};
-```
+## Content and images
 
-### Step 3 — Add your photos
+Experience, projects, and certificates use arrays of entries:
 
-Copy your profile photos into `my-data/images/` and set the filenames in `config.js`.  
-Both `heroBaseImage` and `heroHoverImage` can be the same photo if you only have one.
-
-### Step 4 — Add your projects and certifications
-
-**Option A — Edit the JSON file directly:**  
-Open `my-data/portfolio_data.json` and replace the sample data with yours. The schema is self-explanatory.
-
-**Option B — Use the admin dashboard (no code):**  
-Open `index.html?admin=YOUR_ADMIN_URL_KEY` in your browser, enter your password, and add content through the UI. When done, click **Export JSON** and replace `portfolio_data.json` with the downloaded file to make changes permanent across devices.
-
-### Step 5 — Deploy for free
-
-**GitHub Pages (2 minutes):**
-1. Push your files to a GitHub repository.
-2. Go to **Settings → Pages**, set source to `main` branch, root `/`.
-3. Your site is live at `https://yourusername.github.io/repo-name`.
-
-**Netlify (under a minute):**  
-Drag and drop the template folder onto [app.netlify.com/drop](https://app.netlify.com/drop). Done.
-
-**Vercel:**  
-Import your GitHub repo at [vercel.com](https://vercel.com). Auto-deploys on every push.
-
----
-
-## How content works
-
-All portfolio content is read from `my-data/portfolio_data.json`:
-
-```jsonc
+```json
 {
-    "bio": {
-        "name": "Jane Doe",
-        "title": "Full Stack Developer",
-        "desc": "Your bio text here...",
-        "img": "my-data/images/me.jpg",
-        "loc": "San Francisco, CA",
-        "exp": "Software Engineer"
-    },
-    "projects": [
-        {
-            "id": 1,
-            "title": "My Project",
-            "link": "https://github.com/yourusername/project",
-            "img": "",          // URL, base64 image, or leave empty
-            "learned": "What the project is and what you built.",
-            "skills": "React, Node.js, PostgreSQL"
-        }
-    ],
-    "certs": [
-        {
-            "id": 101,
-            "title": "AWS Certified Developer",
-            "link": "https://credly.com/badges/your-badge",
-            "img": "",          // paste data:image/png;base64,... or data:application/pdf;base64,...
-            "learned": "What this certification covers.",
-            "skills": "AWS Lambda, DynamoDB, S3"
-        }
-    ]
+  "id": 1001,
+  "title": "My project",
+  "learned": "What I built, who it helps, and the result.",
+  "skills": "HTML, CSS, JavaScript",
+  "link": "https://example.com",
+  "img": ""
 }
 ```
 
-The page loads this file at runtime and merges it with any data saved via the admin dashboard. Your admin edits always take priority over the file.
+Keep IDs unique within each collection. The template accepts numeric IDs and older string IDs. An empty image hides the project or experience thumbnail. Project actions distinguish GitHub repositories from live sites. Descriptions retain their full text.
 
----
+For an experience date, use `date` for display and optional `sDate`, `eDate` (`YYYY-MM`), and `isPresent` for the editor’s date controls.
 
-## How mobile/desktop works
+Image fields accept a URL or a path such as `my-data/images/project.png`. Certificate fields also accept a filename from `my-data/images/certs/`. Missing certificate images use a local placeholder. The desktop editor supports uploaded image and PDF data URLs; desktop PDFs render through PDF.js and mobile PDFs provide an open-document action.
 
-When a visitor opens `index.html` on a phone or tablet, a small script at the top detects the device and instantly redirects to `mobile.html`:
+The `resume` object supports `phone`, `summary`, `skills` (label/value pairs), `education` (title/institution/date/description), and `languages`. Experience, projects, and certificates automatically appear in the résumé. Identity comes from `config.js`; location and the fallback summary come from `bio`. Adjust content length before printing.
 
-- **Desktop** → `index.html` — animated scroll-reveal, spotlight cursor, modal overlays
-- **Mobile** → `mobile.html` — single scrollable page, all content visible immediately, tap to toggle hero photo
+## Local editor and publishing
 
-Both pages read from the same `config.js` and `portfolio_data.json`, so your content is always in sync.
+Open `index.html?admin=admin` and enter the example password `demo`. Configure the convenience gate in `config.js`. The editor opens the desktop layout, including on a touch device.
 
-To view the desktop version on a phone (e.g. for testing), add `?forceDesktop=1` to the URL.
+The dashboard is a browser-only editor, and its password is visible in the public configuration. It provides no server authentication and cannot change the deployed files. Its draft is stored under `storageKey + ':draft'` in the current browser.
 
----
+- Add, edit, delete, or import portfolio entries in the dashboard.
+- Reload the admin URL to continue the same draft.
+- Use `?preview=1` to preview that draft on the portfolio or résumé in the same browser.
+- Ordinary visitors see the published JSON, including when a local draft exists.
+- Export JSON and replace `my-data/portfolio_data.json` with the exported file, then commit/deploy it to publish the changes.
 
-## How the admin dashboard works
+Use a unique storage key for each fork sharing the same domain. Storage can be unavailable or full; export your changes before closing the editor. The optional GitHub token input stays in the current page and is sent only to GitHub API requests; never commit tokens. The Python importer requires Python 3 and runs from any working directory using `python scripts/sync_github_projects.py`.
 
-1. Visit `https://yoursite.com/?admin=YOUR_ADMIN_URL_KEY`
-2. Enter your password from `config.js`
-3. You can now add/edit/delete your bio, projects, and certifications
-4. Changes are saved instantly to `localStorage` — no server needed
-5. Use **Export JSON** to download your data and commit it to the repo so it works on all devices
+## Journal
 
-> The admin dashboard is only available on the desktop version. It is not shown on mobile.
+The supplied articles show headings, lists, code, tables, source references, and a figure. Replace their content and dates with your own writing. Each article has:
 
----
+```json
+{
+  "slug": "my-first-post",
+  "title": "My first post",
+  "category": "Notes",
+  "status": "published",
+  "date": "2026-01-01",
+  "updated": "2026-01-01",
+  "excerpt": "A short introduction.",
+  "takeaway": "The main idea.",
+  "body": "## Introduction\n\nYour article text.",
+  "sources": []
+}
+```
 
-## Customising the look
+The category must match a topic name in `MY_CONFIG.blog.topics`. Optional fields include `kind`, `featured`, `eventDate`, and `sourceChecked`. Source entries have a `label` and HTTPS `url`; use `[S1]` in the body to link a source whose label starts with S1.
 
-The colours and styles for each page are controlled by CSS variables at the top of each file.
+Put figures in `blog/figures/` and use `![Description](/figures/filename.svg)` in the body. PNG, SVG, JPG, and WebP figures are supported. Policy bodies in `blog/policies.json` are trusted author-written HTML; replace the sample pages with information describing your site.
 
-**`mobile.html` variables:**
+Run `npm run build:blog` to regenerate all published pages. A manifest removes stale article/topic pages from earlier builds. Articles with another status are excluded from generated pages, but their source JSON remains public. Keep confidential drafts outside the deployed folder.
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `--bg` | `#ffffff` | Page background |
-| `--fg` | `#000000` | Text and borders |
-| `--muted` | `#888888` | Subdued labels |
-| `--border` | `#eeeeee` | Card and divider borders |
-| `--card-bg` | `#fafafa` | Card background |
-| `--radius` | `12px` | Card corner radius |
+Set `siteUrl` to your real origin, including any repository path, before building RSS, canonical links, and the sitemap. Navigation uses explicit relative HTML links so it also works without hosting rewrites.
 
-**`index.html` (desktop)** uses the same black-and-white palette by design — clean, typographic, and timeless.
+Disabling the journal hides its portfolio navigation; to omit journal files from deployment, remove the `blog/` folder from your published copy as well.
 
----
+## Deploy
 
-## Credits
+Publish the **contents of this template folder** as your site root.
 
-- **Template by:** [Saud Alotaibi](https://github.com/SaudMonsour) — open source, use freely
-- **Fonts:** [Google Fonts](https://fonts.google.com/) — Inter, Playfair Display
-- **PDF rendering:** [pdf.js](https://mozilla.github.io/pdf.js/) by Mozilla
-- **Hosting options:** [GitHub Pages](https://pages.github.com/), [Netlify](https://netlify.com), [Vercel](https://vercel.com)
+- **Vercel:** import the repository and set Root Directory to `template`. Use the static/Other preset; the committed HTML is ready to serve. The supplied configuration supports extensionless blog URLs as an option.
+- **Netlify or another static host:** publish `template/`. Generated HTML is committed, so a build step is optional.
+- **GitHub Pages:** copy the template contents into the root of your own site repository and publish that root with Pages. Set `siteUrl` to `https://yourusername.github.io/repo-name` and rebuild the journal. Relative links also work on this repository’s `/template/index.html` path if its repository root is published.
 
----
+Both layouts support `?forceDesktop=1`; mobile visitors normally redirect automatically, preserving portfolio section anchors. The optional server runs on port 5000, or the `PORT` environment setting.
 
-*No frameworks. No build step. Just edit `config.js` and deploy.*
+## Customize and check
+
+Colors and typography are defined by CSS variables at the start of each page. Journal styles live in `blog/style.css`. Source comments identify the configuration, renderer, preview, and draft-saving code.
+
+Run `npm test` to validate scripts, generated local links, and journal behavior. Fonts load from Google Fonts and desktop PDF previews use PDF.js from a CDN. Core content, images, and journal search are served from this template.
+
+Template originally created by [Saud Alotaibi](https://github.com/SaudMonsour).
+

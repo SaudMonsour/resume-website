@@ -1,62 +1,47 @@
 /**
- * Portfolio Configuration File
- * 
- * This is the ONLY file you need to edit to personalise the portfolio.
- * Fill in your own details below and save — the site will update automatically.
+ * Start here: replace the example identity, portraits and links with your own.
+ * Portfolio entries and resume details live in portfolio_data.json.
+ * Blog articles live in blog/articles.json; rebuild them after editing.
+ * This file is public. Never put real secrets here.
  */
-
 const MY_CONFIG = {
+    name: 'Jane Doe',
+    title: 'Full Stack Developer',
+    pageTitle: 'Jane Doe | Full Stack Developer',
 
-    // Your full name — displayed in the hero, nav, and footer.
-    // Example: "Jane Doe"
-    name: "Jane Doe",
+    // Canonical blog links, RSS and sitemap. Include the repository path for
+    // GitHub Pages: https://username.github.io/repo. Rebuild after changing it.
+    siteUrl: 'https://example.com',
 
-    // Your job title or tagline shown beneath your name on the hero section.
-    // Example: "Full Stack Developer"
-    title: "Full Stack Developer",
+    // Replace these neutral placeholders. Both may use the same photo.
+    // Desktop hover reveals the alternate portrait; mobile tap toggles it.
+    heroBaseImage: './my-data/images/hero-base.svg',
+    heroHoverImage: './my-data/images/hero-hover.svg',
+    // Empty values hide optional social links. Use a bare email address.
+    socials: { github: 'https://github.com/yourusername', linkedin: '', email: 'you@example.com' },
+    githubUsername: 'yourusername', // Repository imports use public repos.
 
-    // The browser tab title.
-    // Example: "Jane Doe | Full Stack Developer"
-    pageTitle: "Jane Doe | Full Stack Developer",
+    // Convenience gate for the browser editor, NOT authentication.
+    // Anyone can read these values. Edits are browser drafts until you export
+    // JSON and commit it. Never add an access token to this file or repository.
+    adminPassword: 'demo',
+    adminUrlKey: 'admin', // Open index.html?admin=admin, including on mobile.
+    dataFile: './my-data/portfolio_data.json',
+    certImageBaseUrl: '', // Optional hosted certificate image folder.
+    storageKey: 'my_portfolio_v4', // Choose a unique key for each site on the same origin.
 
-    // Paths to your profile/hero images.
-    // Place your images inside my-data/images/ and update the filenames below.
-    // heroBaseImage is always visible; heroHoverImage swaps in on desktop hover.
-    heroBaseImage: "./my-data/images/hero-base.jpeg",
-    heroHoverImage: "./my-data/images/hero-hover.jpeg",
-
-    // Social links — leave any value as "" to hide that button entirely.
-    // github   → your GitHub profile URL
-    // linkedin → your LinkedIn profile URL
-    // email    → your email address (without "mailto:", just the address)
-    socials: {
-        github: "https://github.com/yourusername",
-        linkedin: "https://linkedin.com/in/yourusername",
-        email: "jane@example.com"
-    },
-
-    // Your GitHub username — used by the admin dashboard to import repositories.
-    // Example: "yourusername"
-    githubUsername: "yourusername",
-
-    // Admin dashboard password — keep this private, choose something strong.
-    // The dashboard is only accessible on the desktop version.
-    adminPassword: "yourpassword",
-
-    // Secret URL key used to open the admin dashboard.
-    // Visit /?admin=YOUR_KEY to open the dashboard login prompt.
-    // Example: "myportfoliokey"
-    adminUrlKey: "admin",
-
-    // Path to the JSON file that stores your projects and certifications.
-    // You normally do not need to change this.
-    dataFile: "./my-data/portfolio_data.json",
-
-    // (Optional) Base URL for certificate images hosted on GitHub.
-    // Leave as "" if you are not using this feature.
-    certImageBaseUrl: "",
-
-    // Local-storage key for caching your portfolio data in the browser.
-    // Change this to a new unique string to reset all locally saved data.
-    storageKey: "portfolio_v3"
+    // Set enabled:false to hide journal navigation in the portfolio.
+    // Rebuild the blog after editing these fields. Topic names must be unique.
+    blog: {
+        enabled: true,
+        title: 'Jane’s Journal',
+        label: 'Projects & lessons',
+        description: 'Ideas, project notes, and lessons from building useful software.',
+        topics: [
+            { name: 'Projects', description: 'How I approach and build my projects.' },
+            { name: 'Guides', description: 'Practical explanations and useful examples.' },
+            { name: 'Notes', description: 'Short reflections and things I have learned.' }
+        ]
+    }
 };
+
